@@ -1,0 +1,11 @@
+venv/
+.venv/
+.env
+__pycache__/
+.idea/
+.vscode/
+.DS_Store
+data/
+docker-compose.yml
+
+
