@@ -38,6 +38,21 @@ h1 {
 .container .login-btn:hover {
   background-color: #0056b3;
 }
+.register-btn {
+  padding: 10px 20px;
+  background-color: #08d3ba;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn-index > a{
+  text-underline: none;
+}
 
 .container .logout-btn {
   padding: 10px 20px;

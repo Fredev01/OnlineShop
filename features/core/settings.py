@@ -15,5 +15,7 @@ class Settings:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
     FLASK_ENV = os.getenv("FLASK_ENV")
+    GOOGLE_CLIENT_ID = os.getenv("CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 settings = Settings()

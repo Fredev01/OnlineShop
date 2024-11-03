@@ -1,13 +1,12 @@
 from flask import Blueprint, jsonify, request, redirect, session, url_for, render_template
-from werkzeug.security import generate_password_hash, check_password_hash
 # from flask_jwt_extended import create_access_token, current_user, jwt_required, \
 #     set_access_cookies, unset_jwt_cookies, verify_jwt_in_request
 # from flask_login import login_user, logout_user
-from .model import User
 from .use_case import UserCU
 # from features.core.projectdefs import response_bad_request
 
 app = Blueprint("AuthApi", __name__, url_prefix="/api/auth")
+
 
 # def user_has_session():
 #     try:
@@ -53,9 +52,9 @@ app = Blueprint("AuthApi", __name__, url_prefix="/api/auth")
 def api_login():
     username = request.form['username']
     password = request.form['password']
-    user_cu = UserCU(generate_password_hash, check_password_hash)
+    user_cu = UserCU()
     user = user_cu.get_user(username)
-    if user and user_cu.check_password(user, password):
+    if user and user.check_password(password):
         session['username'] = username
         return redirect(url_for('dashboard'))
     else:
@@ -66,7 +65,7 @@ def api_login():
 def api_register():
     username = request.form['username']
     password = request.form['password']
-    user_cu = UserCU(generate_password_hash, check_password_hash)
+    user_cu = UserCU()
     user = user_cu.get_user(username)
     if user:
         return render_template('login.html', error='Username already exists.')
@@ -85,6 +84,8 @@ def api_register():
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
+
+# login for google
 # @app.route("/logout", methods=["GET", "DELETE"])
 # def logout():
 #     response = jsonify({"ok": True})
