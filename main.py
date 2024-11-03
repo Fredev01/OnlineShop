@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, url_for, session
 import pymysql
 from features import settings
 from features import db
-
+from features import auth_route, auth_api
 
 pymysql.install_as_MySQLdb()
 
@@ -14,7 +14,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-
+app.register_blueprint(auth_api)
+app.register_blueprint(auth_route)
 @app.route('/')
 def home():
     """Displays a Page based on the session of the current user
@@ -22,6 +23,9 @@ def home():
     Returns:
         html template: Returns the Dashboard or Index
     """
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
