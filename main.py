@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, url_for, session, request
+from flask_wtf import CSRFProtect
 import pymysql, os
 from authlib.integrations.flask_client import OAuth
 from features import settings, db, auth_route, auth_api, UserCU
@@ -17,7 +18,9 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_secret_key")  # Carg
 app.config["SQLALCHEMY_DATABASE_URI"] = settings.DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# Inicializa la base de datos y la protección CSRF
 db.init_app(app)
+csrf = CSRFProtect(app)
 
 oauth = OAuth(app)
 google = oauth.register(
@@ -38,7 +41,6 @@ def home():
     if 'username' in session:
         return redirect(url_for('list_products'))
     return render_template('login.html')
-
 
 @app.route('/products')
 def list_products():
