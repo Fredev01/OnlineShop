@@ -3,3 +3,4 @@ flask_sqlalchemy
 sqlalchemy_utils
 pymysql
 python-dotenv
+flask-wtf
