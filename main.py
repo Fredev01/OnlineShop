@@ -1,8 +1,8 @@
 from flask import Flask, redirect, render_template, url_for, session
 import pymysql
+from features.core.models import Product  # Importa tu modelo de Product
 from authlib.integrations.flask_client import OAuth
-from features import settings
-from features import db, auth_route, auth_api, UserCU
+from features import db, auth_route, auth_api, UserCU, settings
 
 pymysql.install_as_MySQLdb()
 
@@ -22,8 +22,7 @@ google = oauth.register(
 
 db.init_app(app)
 
-app.register_blueprint(auth_api)
-app.register_blueprint(auth_route)
+
 @app.route('/')
 def home():
     """Displays a Page based on the session of the current user
@@ -33,7 +32,7 @@ def home():
     """
     if 'username' in session:
         return redirect(url_for('dashboard'))
-    return render_template('dashboard.html')  # Asegúrate de tener un archivo index.html en la carpeta de templates
+    return render_template('search.html')  # Asegúrate de tener un archivo index.html en la carpeta de templates
 
 @app.route('/dashboard')
 def dashboard():
