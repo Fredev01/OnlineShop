@@ -5,6 +5,7 @@ from authlib.integrations.flask_client import OAuth
 from features import settings, db  
 from dotenv import load_dotenv
 from features import db, auth_route, auth_api, UserCU
+import os
 
 load_dotenv()
 
@@ -27,8 +28,10 @@ google = oauth.register(
 
 # Inicializa la base de datos y la protección CSRF
 db.init_app(app)
+csrf = CSRFProtect(app)
 
-
+app.register_blueprint(auth_api)
+app.register_blueprint(auth_route)
 @app.route('/')
 def home():
     """Displays a Page based on the session of the current user
@@ -36,6 +39,9 @@ def home():
     Returns:
         html template: Returns the Dashboard or Index
     """
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
@@ -76,4 +82,4 @@ def authorize_google():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8000, ssl_context=('cert.pem', 'key.pem'))
+    app.run(debug=True, host="0.0.0.0", port=8000)
