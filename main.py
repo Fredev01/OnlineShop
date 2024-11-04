@@ -33,7 +33,7 @@ def home():
     """
     if 'username' in session:
         return redirect(url_for('dashboard'))
-    return render_template('index.html')
+    return render_template('login.html')
 
 @app.route('/dashboard')
 def dashboard():

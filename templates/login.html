@@ -2,30 +2,60 @@
 
 {% block body %}
 <div class="container">
-    <form id="auth-form" action="{{ url_for('AuthApi.api_login') }}" method="post">
-        <input type="text" name="username" placeholder="Username" autocomplete="off">
-        <input type="password" name="password" placeholder="Password" autocomplete="off">
-        <input type="submit" value="Login" class="login-btn" onclick="setFormAction('login')">
-        <input type="button" value="Register" class="register-btn" onclick="setFormAction('register')">
-        <input type="button" class="btn login-google" value="Login with Google" onclick="login_google()">
-    </form>
+    <div class="container-login">
+         <h2 class="title-login">Iniciar sesión o registrarse</h2>
+        <form id="auth-form" action="{{ url_for('AuthApi.api_login') }}" method="post" onsubmit="return validateForm()">
+            <input type="text" name="username" id="username" placeholder="Usuario" autocomplete="off" required>
+            <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="off" required>
+            <input type="submit" value="Iniciar sesión" class="login-btn" onclick="login(); return validateForm();">
+            <input type="button" value="Registrar" class="register-btn" onclick="register()">
+        </form>
+        <div class="login-google" onclick="login_google()">
+            <img src="{{ url_for('static', filename='img/google.png') }}" alt="google">
+        </div>
+    </div>
 </div>
 
 <script>
-    function setFormAction(action) {
+    function login() {
         var form = document.getElementById('auth-form');
-        if (action === 'login') {
-            form.action = "{{ url_for('AuthApi.api_login') }}";
-            form.method = "post";
-            form.submit();
-        } else if (action === 'register') {
+        form.action = "{{ url_for('AuthApi.api_login') }}";
+        form.method = "post";
+    }
+
+    function login_google() {
+        window.location.href = "{{ url_for('login_google') }}";
+    }
+
+    function validateForm() {
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value.trim();
+
+        if (username === "") {
+            alert("Por favor, ingresa tu nombre de usuario.");
+            return false;
+        }
+
+        if (password === "") {
+            alert("Por favor, ingresa tu contraseña.");
+            return false;
+        }
+
+        if (password.length < 6) {
+            alert("La contraseña debe tener al menos 6 caracteres.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function register() {
+        var form = document.getElementById('auth-form');
+        if (validateForm()) {
             form.action = "{{ url_for('AuthApi.api_register') }}";
             form.method = "post";
             form.submit();
         }
-    }
-    function login_google() {
-        window.location.href = "{{ url_for('login_google') }}";
     }
 </script>
 {% endblock %}
