@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #d2cece; /* Color de fondo */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #ff6b6b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin: 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px; /* Espaciado entre las opciones */
+            flex-grow: 1;
+            justify-content: center; /* Centrar las opciones */
+        }
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .logout-button {
+            background-color: #ff0000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #FFF;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .logout-button:hover {
+            background-color: #9b2a2a;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .form-group button {
+            background-color: #ff6b6b;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-group button:hover {
+            background-color: #ff4c4c; /* Cambiar el color al hacer hover */
+        }
+    </style>
+</head>
+<body onload="showAlert()">
+    <div class="navbar">
+        <h1>OnliShop</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('list_products') }}" class="nav-link">Productos</a>
+            <a href="#" class="nav-link">Agregar Producto</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contáctanos</a>
+        </div>
+        <a href="{{ url_for('AuthApi.logout') }}" class="logout-button">Cerrar Sesión</a>
+    </div>
+
+<div class="form-container">
+    <h1>Contáctanos</h1>
+    <p>Este apartado es para dudas y aclaraciones.</p>
+    <form action="{{ url_for('trigger_email') }}" method="POST" onsubmit="return validateForm(event);">
+        <div class="form-group">
+            <label for="email_sender">Tu Email:</label>
+            <input type="email" id="email_sender" name="email_sender" required>
+        </div>
+        <div class="form-group">
+            <label for="subject">Asunto:</label>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <div class="form-group">
+            <label for="body">Mensaje:</label>
+            <textarea id="body" name="body" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit">Enviar Mensaje</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Función para mostrar el alert si se envió el mensaje
+    function showAlert() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('success')) {
+            alert('¡Mensaje enviado exitosamente!');
+        }
+    }
+
+    function validateForm(event) {
+        const email = document.getElementById('email_sender').value;
+        const subject = document.getElementById('subject').value;
+        const body = document.getElementById('body').value;
+
+        if (!email) {
+            alert('Por favor, ingresa tu email.');
+            event.preventDefault(); 
+            return false;
+        }
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            alert('Por favor, ingresa un email válido.');
+            event.preventDefault();
+            return false;
+        }
+        if (!subject) {
+            alert('Por favor, ingresa un asunto.');
+            event.preventDefault();
+            return false;
+        }
+        if (!body) {
+            alert('Por favor, ingresa un mensaje.');
+            event.preventDefault();
+            return false;
+        }
+
+        return true; 
+    }
+</script>
+</html>

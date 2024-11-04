@@ -56,7 +56,7 @@ def api_login():
     user = user_cu.get_user(username)
     if user and user.check_password(password):
         session['username'] = username
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('list_products'))
     else:
         return render_template('login.html', error='Invalid username or password.')
 
@@ -73,7 +73,7 @@ def api_register():
         user = user_cu.create_user(username, password)
         if user:
             session['username'] = username
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('list_products'))
         else:
             return render_template('login.html', error='Error creating user.')
 

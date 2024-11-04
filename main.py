@@ -1,16 +1,23 @@
-from flask import Flask, redirect, render_template, url_for, session
-import pymysql
-from features.core.models import Product  # Importa tu modelo de Product
+from flask import Flask, redirect, render_template, url_for, session, request
+import pymysql, os
 from authlib.integrations.flask_client import OAuth
-from features import db, auth_route, auth_api, UserCU, settings
+from features import settings, db, auth_route, auth_api, UserCU
+from features.core.models import Product  # Importa tu modelo de Product
+from dotenv import load_dotenv
+from email.message import EmailMessage  # Importa EmailMessage aquí
+import smtplib, ssl
 
 pymysql.install_as_MySQLdb()
+load_dotenv()
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = settings.SECRET_KEY
 app.config["SQLALCHEMY_DATABASE_URI"] = settings.DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+
 oauth = OAuth(app)
 google = oauth.register(
     name="google",
@@ -20,26 +27,36 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'},
 )
 
-db.init_app(app)
-
+# Registrar blueprints
+app.register_blueprint(auth_api)
+app.register_blueprint(auth_route)
 
 @app.route('/')
 def home():
-    """Displays a Page based on the session of the current user
-
-    Returns:
-        html template: Returns the Dashboard or Index
-    """
+    """Displays a Page based on the session of the current user"""
     if 'username' in session:
-        return redirect(url_for('dashboard'))
-    return render_template('search.html')  # Asegúrate de tener un archivo index.html en la carpeta de templates
+        return redirect(url_for('list_products'))
+    return render_template('login.html')
 
-@app.route('/dashboard')
-def dashboard():
-    if 'username' in session:
-        return render_template('dashboard.html', username=session['username'])
-    return redirect(url_for('home'))
 
+@app.route('/products')
+def list_products():
+    """Displays a Page with a list of products"""
+    products = Product.query.all()  # Assuming Product is a SQLAlchemy model
+
+    # Convert products to a list of dictionaries
+    serialized_products = [
+        {
+            "name": product.name,
+            "category": product.category,
+            "price": product.price,
+            "stock": product.stock,
+            "image": url_for('static', filename=f'img/{product.image}')
+        }
+        for product in products
+    ]
+
+    return render_template('search.html', products=serialized_products)
 
 @app.route("/login/google")
 def login_google():
@@ -48,9 +65,7 @@ def login_google():
         return google.authorize_redirect(redirect_uri)
     except Exception as err:
         print(err)
-        return "Error ocurred during login with google", 500
-
-
+        return "Error occurred during login with Google", 500
 
 @app.route("/authorize/google")
 def authorize_google():
@@ -65,10 +80,38 @@ def authorize_google():
         if user_created_successfully:
             session['username'] = username
             session['oauth_token'] = token
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('list_products'))
     except Exception as err:
         print(err)
-        return "Error ocurred during login with google", 500
+        return "Error occurred during login with Google", 500
+
+@app.route('/contact')
+def contact():
+    """Displays the contact form page."""
+    return render_template('contactanos.html')  # Asegúrate de tener este template creado
+
+def send_email(email_sender, email_receiver, subject, body):
+    em = EmailMessage()
+    em['From'] = email_sender
+    em['To'] = email_receiver
+    em['Subject'] = subject
+    em.set_content(body)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_sender, 'izqtoxhdvxnipoky')   
+        smtp.sendmail(email_sender, email_receiver, em.as_string())
+
+@app.route("/send_email", methods=["POST"])
+def trigger_email():
+    email_sender = request.form["email_sender"]
+    email_receiver = request.form.get("email_receiver", os.getenv("USER_SEND_GMAIL"))
+    subject = request.form["subject"]
+    body = request.form["body"]
+
+    send_email(email_sender, email_receiver, subject, body)
+    return redirect(url_for('contact', success=True))
 
 if __name__ == "__main__":
     with app.app_context():

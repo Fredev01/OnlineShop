@@ -14,20 +14,47 @@
             margin: 0;
             padding: 0;
         }
-        .banner {
+        /* Estilos para el navbar */
+        .navbar {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: space-between;
+            padding: 10px 20px;
             background-color: #ff6b6b;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-        .banner h1 {
-            font-size: 3rem;
-            font-weight: bold;
+        .navbar h1 {
+            font-size: 1.5rem;
             color: #ffffff;
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px; /* Espaciado entre las opciones */
+            flex-grow: 1;
+            justify-content: center; /* Centrar las opciones */
+        }
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .logout-button {
+            background-color: #ff0000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #FFF;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .logout-button:hover {
+            background-color: #9b2a2a;
+            transform: translateY(-2px);
         }
         .search-filters {
             background-color: #ffffff;
@@ -118,8 +145,14 @@
 </head>
 <body>
 
-    <div class="banner">
-        <h1>Buscador de Productos</h1>
+    <div class="navbar">
+        <h1>OnliShop</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('list_products') }}" class="nav-link">Productos</a>
+            <a href="#" class="nav-link">Agregar Producto</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contáctanos</a>
+        </div>
+        <a href="{{ url_for('AuthApi.logout') }}" class="logout-button">Cerrar Sesión</a>
     </div>
 
     <div class="search-filters">
@@ -184,15 +217,14 @@
             filteredProducts.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
+                productCard.innerHTML = 
+                    `<img src="${product.image}" alt="${product.name}">
                     <div class="product-info">
                         <h2>${product.name}</h2>
                         <p>Categoría: ${product.category}</p>
                         <p>Precio: $${product.price}</p>
                         <p>Stock: ${product.stock} unidades</p>
-                    </div>
-                `;
+                    </div>`;
                 gridContainer.appendChild(productCard);
             });
         }
@@ -200,11 +232,9 @@
             displayProducts(products);
         });
     </script>
-    
-   
-    <div class="footer">
-        &copy; 2024 Tienda Online . Todos los derechos reservados equipo 2 *_*.
-    </div>
 
+    <footer class="footer">
+        <p>&copy; 2024 OnliShop. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
