@@ -5,7 +5,6 @@ from features import settings, db
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
 pymysql.install_as_MySQLdb()
@@ -28,7 +27,6 @@ def home():
     Returns:
         html template: Returns the Dashboard or Index
     """
-    return render_template('index.html')
     if 'username' in session:
         return redirect(url_for('dashboard'))
     return render_template('search.html')  # Asegúrate de tener un archivo index.html en la carpeta de templates
