@@ -3,6 +3,8 @@ flask_sqlalchemy
 sqlalchemy_utils
 pymysql
 python-dotenv
+cryptography
 Authlib
 Flask-OAuthlib
 passlib[bcrypt]
+flask-wtf

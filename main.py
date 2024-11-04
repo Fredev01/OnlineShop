@@ -4,7 +4,8 @@ import pymysql
 from authlib.integrations.flask_client import OAuth
 from features import settings, db  
 from dotenv import load_dotenv
-import os, auth_route, auth_api, UserCU
+from features import db, auth_route, auth_api, UserCU
+
 load_dotenv()
 
 pymysql.install_as_MySQLdb()
