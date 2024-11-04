@@ -9,7 +9,88 @@ h1 {
   max-width: 800px;
   margin: 50px auto;
   text-align: center;
+  border-radius: 20px;
+
 }
+
+.container-login {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
+  border-radius: 20px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+.container-login:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+
+        .title-login {
+            margin-bottom: 20px; /* Espaciado inferior del título */
+            font-size: 24px; /* Tamaño de fuente del título */
+            color: #333; /* Color del texto del título */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 50%; /* Ancho completo */
+            padding: 10px; /* Espaciado interno */
+            margin: 10px auto; /* Espaciado superior e inferior */
+            border: 1px solid #ccc; /* Borde del campo de entrada */
+            border-radius: 5px; /* Esquinas redondeadas */
+            font-size: 16px; /* Tamaño de fuente */
+        }
+
+        .login-btn,
+        .register-btn{
+            display: block;
+            width: 180px;
+            padding: 10px; /* Espaciado interno */
+            margin: 10px auto; /* Espaciado superior e inferior */
+            border: none; /* Sin borde */
+            border-radius: 5px; /* Esquinas redondeadas */
+            font-size: 16px; /* Tamaño de fuente */
+            cursor: pointer; /* Cambiar cursor al pasar el mouse */
+        }
+
+        .login-btn {
+            background-color: #4CAF50; /* Color de fondo para el botón de login */
+            color: white; /* Color de texto */
+        }
+
+        .register-btn {
+            background-color: #008CBA; /* Color de fondo para el botón de registro */
+            color: white; /* Color de texto */
+        }
+
+        .login-google {
+            background-color: #e4ada6;
+            display: block;
+            width: 100px;
+            padding: 10px;
+            margin: 10px auto;
+            border: none;
+            border-radius: 45px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #efefef;
+        }
+
+        .login-btn:hover,
+        .register-btn:hover,
+        .login-google:hover {
+            opacity: 0.8; /* Efecto de hover */
+            transition: opacity 0.3s; /* Transición suave */
+        }
+
 
 .container h1 {
   font-size: 36px;
@@ -51,7 +132,7 @@ h1 {
 }
 
 .login-btn-index > a{
-  text-underline: none;
+  text-rendering: none;
 }
 
 .container .logout-btn {
