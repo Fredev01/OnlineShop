@@ -7,4 +7,3 @@ cryptography
 Authlib
 Flask-OAuthlib
 passlib[bcrypt]
-flask-wtf

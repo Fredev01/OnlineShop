@@ -8,65 +8,119 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #dbdada;
-            color: #dbdada;
+            font-family: 'Arial', sans-serif;
+            background-color: #d2cece; /* Color de fondo más oscuro */
+            color: #333;
+            margin: 0;
+            padding: 0;
         }
-        .banner {
+        /* Estilos para el navbar */
+        .navbar {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background-color: #fc0054;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #ff6b6b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-        .banner h1 {
-            font-size: 2rem;
-            font-weight: bold;
+        .navbar h1 {
+            font-size: 1.5rem;
             color: #ffffff;
-            margin-right: 10px;
+            margin: 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px; /* Espaciado entre las opciones */
+            flex-grow: 1;
+            justify-content: center; /* Centrar las opciones */
+        }
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .logout-button {
+            background-color: #ff0000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #FFF;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .logout-button:hover {
+            background-color: #9b2a2a;
+            transform: translateY(-2px);
         }
         .search-filters {
-            background-color: #fc0054;
+            background-color: #ffffff;
             padding: 20px;
-            margin: 20px;
-            border-radius: 8px;
+            margin: 20px auto; /* Centrado automático */
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: fit-content; /* Ajusta el ancho al contenido */
         }
-        .input {
-            background-color: #dbdada;
+        .input, .select {
+            background-color: #f1f1f1;
             color: #444;
-            border: none;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 4px;
-            width: calc(100% - 10px);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            width: 150px; /* Ancho fijo */
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s;
+        }
+        .input:focus, .select:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 30, 30, 0.5); /* Sombra en foco */
         }
         .button {
             background-color: #0BF868;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
             color: #FFF;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background-color: #09d454;
+            transform: translateY(-2px);
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             padding: 20px;
         }
         .product-card {
-            background-color: #fc0054;
-            border-radius: 8px;
+            background-color: #ffffff;
+            border-radius: 12px;
             overflow: hidden;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); /* Sombra más intensa */
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45); /* Efecto al pasar el mouse */
         }
         .product-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 6px;
+            transition: transform 0.3s;
+        }
+        .product-card img:hover {
+            transform: scale(1.05); /* Efecto de zoom en la imagen */
         }
         .product-info {
             margin-top: 10px;
@@ -74,21 +128,36 @@
         }
         .product-info h2 {
             font-size: 1.5rem;
-            color: #0BF868;
+            color: #ff6b6b;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Encabezado -->
-    <div class="banner">
-        <h1>Buscador de productos</h1>
+    <div class="navbar">
+        <h1>OnliShop</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('list_products') }}" class="nav-link">Productos</a>
+            <a href="#" class="nav-link">Agregar Producto</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contáctanos</a>
+        </div>
+        <a href="{{ url_for('AuthApi.logout') }}" class="logout-button">Cerrar Sesión</a>
     </div>
 
-    <!-- Filtros de búsqueda -->
     <div class="search-filters">
         <input type="text" id="searchName" class="input" placeholder="Buscar por nombre">
-        <select id="searchCategory" class="input">
+        <select id="searchCategory" class="select">
             <option value="">Categoría</option>
             <option value="Electrónica">Electrónica</option>
             <option value="Ropa">Ropa</option>
@@ -102,88 +171,70 @@
     <!-- Productos en formato de tarjetas -->
     <div class="grid-container" id="productGrid">
         <!-- Aquí se llenarán los productos -->
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename='img/' + product.image) }}" alt="{{ product.name }}">
+            <div class="product-info">
+                <h2>{{ product.name }}</h2>
+                <p>Categoría: {{ product.category }}</p>
+                <p>Precio: ${{ product.price }}</p>
+                <p>Stock: {{ product.stock }}</p>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 
     <script>
-        const products = [
-            {
-                name: "Smartphone XYZ",
-                category: "Electrónica",
-                price: 299,
-                stock: 15,
-                image: "{{ url_for('static', filename='img/300.png') }}"
-            },
-            {
-                name: "Playera Casual",
-                category: "Ropa",
-                price: 25,
-                stock: 50,
-                image: "{{ url_for('static', filename='img/300.png') }}"
-            },
-            {
-                name: "Lámpara de Mesa",
-                category: "Hogar",
-                price: 45,
-                stock: 30,
-                image: "{{ url_for('static', filename='img/300.png') }}"
-            },
-            {
-                name: "Auriculares Bluetooth",
-                category: "Electrónica",
-                price: 75,
-                stock: 20,
-                image: "{{ url_for('static', filename='img/300.png') }}"
-            }
-        ];
-
+        const products = JSON.parse('{{ products | tojson | safe }}');
+        
         function searchProducts() {
             const name = document.getElementById('searchName').value.toLowerCase();
             const category = document.getElementById('searchCategory').value;
             const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
             const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-
+    
             const filteredProducts = products.filter(product => {
                 const matchesName = product.name.toLowerCase().includes(name);
                 const matchesCategory = category ? product.category === category : true;
                 const matchesMinPrice = product.price >= minPrice;
                 const matchesMaxPrice = product.price <= maxPrice;
-
+    
                 return matchesName && matchesCategory && matchesMinPrice && matchesMaxPrice;
             });
-
+    
             displayProducts(filteredProducts);
         }
-
+    
         function displayProducts(filteredProducts) {
             const gridContainer = document.getElementById('productGrid');
             gridContainer.innerHTML = ''; // Limpiar productos anteriores
-
+    
             if (filteredProducts.length === 0) {
                 gridContainer.innerHTML = '<p>No se encontraron productos que coincidan con los filtros.</p>';
                 return;
             }
-
+    
             filteredProducts.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
+                productCard.innerHTML = 
+                    `<img src="${product.image}" alt="${product.name}">
                     <div class="product-info">
                         <h2>${product.name}</h2>
                         <p>Categoría: ${product.category}</p>
                         <p>Precio: $${product.price}</p>
                         <p>Stock: ${product.stock} unidades</p>
-                    </div>
-                `;
+                    </div>`;
                 gridContainer.appendChild(productCard);
             });
         }
-
-        // Inicializa mostrando todos los productos al cargar
         document.addEventListener('DOMContentLoaded', () => {
             displayProducts(products);
         });
     </script>
 
+    <footer class="footer">
+        <p>&copy; 2024 OnliShop. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
