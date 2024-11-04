@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Dashboard</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #dbdada;
+            color: #dbdada;
+        }
+        .banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #fc0054;
+        }
+        .banner h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-right: 10px;
+        }
+        .search-filters {
+            background-color: #fc0054;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+        .input {
+            background-color: #dbdada;
+            color: #444;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            width: calc(100% - 10px);
+        }
+        .button {
+            background-color: #0BF868;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #FFF;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .product-card {
+            background-color: #fc0054;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .product-info {
+            margin-top: 10px;
+            font-size: 1.25rem;
+        }
+        .product-info h2 {
+            font-size: 1.5rem;
+            color: #0BF868;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <div class="banner">
+        <h1>Buscador de productos</h1>
+    </div>
+
+    <!-- Filtros de búsqueda -->
+    <div class="search-filters">
+        <input type="text" id="searchName" class="input" placeholder="Buscar por nombre">
+        <select id="searchCategory" class="input">
+            <option value="">Categoría</option>
+            <option value="Electrónica">Electrónica</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Hogar">Hogar</option>
+        </select>
+        <input type="number" id="minPrice" class="input" placeholder="Precio mínimo">
+        <input type="number" id="maxPrice" class="input" placeholder="Precio máximo">
+        <button class="button" onclick="searchProducts()">Buscar</button>
+    </div>
+
+    <!-- Productos en formato de tarjetas -->
+    <div class="grid-container" id="productGrid">
+        <!-- Aquí se llenarán los productos -->
+    </div>
+
+    <script>
+        const products = [
+            {
+                name: "Smartphone XYZ",
+                category: "Electrónica",
+                price: 299,
+                stock: 15,
+                image: "{{ url_for('static', filename='img/300.png') }}"
+            },
+            {
+                name: "Playera Casual",
+                category: "Ropa",
+                price: 25,
+                stock: 50,
+                image: "{{ url_for('static', filename='img/300.png') }}"
+            },
+            {
+                name: "Lámpara de Mesa",
+                category: "Hogar",
+                price: 45,
+                stock: 30,
+                image: "{{ url_for('static', filename='img/300.png') }}"
+            },
+            {
+                name: "Auriculares Bluetooth",
+                category: "Electrónica",
+                price: 75,
+                stock: 20,
+                image: "{{ url_for('static', filename='img/300.png') }}"
+            }
+        ];
+
+        function searchProducts() {
+            const name = document.getElementById('searchName').value.toLowerCase();
+            const category = document.getElementById('searchCategory').value;
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+
+            const filteredProducts = products.filter(product => {
+                const matchesName = product.name.toLowerCase().includes(name);
+                const matchesCategory = category ? product.category === category : true;
+                const matchesMinPrice = product.price >= minPrice;
+                const matchesMaxPrice = product.price <= maxPrice;
+
+                return matchesName && matchesCategory && matchesMinPrice && matchesMaxPrice;
+            });
+
+            displayProducts(filteredProducts);
+        }
+
+        function displayProducts(filteredProducts) {
+            const gridContainer = document.getElementById('productGrid');
+            gridContainer.innerHTML = ''; // Limpiar productos anteriores
+
+            if (filteredProducts.length === 0) {
+                gridContainer.innerHTML = '<p>No se encontraron productos que coincidan con los filtros.</p>';
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h2>${product.name}</h2>
+                        <p>Categoría: ${product.category}</p>
+                        <p>Precio: $${product.price}</p>
+                        <p>Stock: ${product.stock} unidades</p>
+                    </div>
+                `;
+                gridContainer.appendChild(productCard);
+            });
+        }
+
+        // Inicializa mostrando todos los productos al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts(products);
+        });
+    </script>
+
+</body>
+</html>

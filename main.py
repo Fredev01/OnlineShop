@@ -22,6 +22,9 @@ def home():
     Returns:
         html template: Returns the Dashboard or Index
     """
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    return render_template('search.html')  # Asegúrate de tener un archivo index.html en la carpeta de templates
 
 @app.route('/dashboard')
 def dashboard():
@@ -32,4 +35,4 @@ def dashboard():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=8000, ssl_context=('cert.pem', 'key.pem'))
